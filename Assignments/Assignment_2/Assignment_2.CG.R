@@ -35,8 +35,5 @@ for(i in bfiles){
 # Task 10
 # Do the same thing for all files that end in “.csv” 
 for(i in csv_files){
-  print(readLines(i[1], n = 1))
+  print(readLines(i, n = 1))
 }
-
-#Save as .txt 
-#ADD COMMIT PUSH 
