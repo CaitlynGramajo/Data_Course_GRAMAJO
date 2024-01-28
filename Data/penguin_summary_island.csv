@@ -1,0 +1,6 @@
+species,island,mean_body_mass,min_body_mass,max_body_mass,sd_body_mass,Number_of_penguins
+Gentoo,Biscoe,4679.741379310345,3950,5200,281.57829364263097,58
+Chinstrap,Dream,3527.205882352941,2700,4150,285.333911718307,34
+Adelie,Dream,3475,3400,3550,106.06601717798213,2
+Adelie,Torgersen,3400,3200,3700,227.3030282830976,4
+Adelie,Biscoe,3200,3200,3200,NA,1
