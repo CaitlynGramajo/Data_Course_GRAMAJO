@@ -44,3 +44,112 @@ ggplot(penguins, mapping = aes(x=flipper_length_mm,
 ggplot(penguins, mapping = aes(x=flipper_length_mm,
                                y = body_mass_g, color=species))+
   geom_line(aes(group=species))
+
+ggplot(penguins, mapping = aes(x=flipper_length_mm,
+                               y = body_mass_g, color=species))+
+  geom_path(aes(group=species))+
+  stat_ellipse()
+
+ggplot(penguins, mapping = aes(x=flipper_length_mm,
+                               y = body_mass_g, color=species))+
+  geom_path(aes(group=species))+
+  stat_ellipse()+
+  geom_point(color='darkorchid3')
+
+ggplot(penguins, mapping = aes(x=flipper_length_mm,
+                               y = body_mass_g, color=species))+
+  geom_path(aes(group=species))+
+  stat_ellipse()+
+  geom_point(aes(color=sex))
+
+ggplot(penguins, mapping = aes(x=flipper_length_mm,
+                               y = body_mass_g, color=species))+
+  geom_path(aes(group=species))+
+  stat_ellipse()+
+  geom_point(aes(color=sex))+
+  geom_hex()
+
+ggplot(penguins, mapping = aes(x=flipper_length_mm,
+                               y = body_mass_g, color=species))+
+  geom_path(aes(group=species))+
+  stat_ellipse()+
+  geom_point(aes(color=sex))+
+  geom_hex()+
+  geom_bin_2d()+
+  geom_polygon()
+
+ggplot(penguins, mapping = aes(x=flipper_length_mm,
+                               y = body_mass_g, color=species))+
+  geom_path(aes(group=species))+
+  stat_ellipse()+
+  geom_point(aes(color=sex))+
+  geom_polygon()+
+  geom_hex()+
+  geom_bin_2d()
+
+
+ggplot(penguins, mapping = aes(x=flipper_length_mm,
+                               y = body_mass_g, color=species))+
+  geom_path(aes(group=species))+
+  stat_ellipse()+
+  geom_point(aes(color=sex))+
+  geom_polygon()+
+  geom_hex()+
+  geom_bin_2d()+
+  geom_boxplot()
+
+ggplot(penguins, mapping = aes(x=flipper_length_mm,
+                               y = body_mass_g, color=species))+
+  geom_path(aes(group=species))+
+  stat_ellipse()+
+  geom_point(aes(color=sex))+
+  geom_polygon()+
+  geom_hex()+
+  geom_bin_2d()+
+  geom_boxplot()+
+  geom_area()
+
+
+ggplot(penguins, mapping = aes(x=flipper_length_mm,
+                               y = body_mass_g, color=species))+
+  geom_path(aes(group=species))+
+  stat_ellipse()+
+  geom_point(aes(color=sex))+
+  geom_polygon()+
+  geom_hex()+
+  geom_bin_2d()+
+  geom_boxplot()+
+  geom_hline(yintercept = 4500, linewidth=69, col="darkorchid4", #I sm going to hell
+             linetype='21', alpha=.25)
+
+
+ggplot(penguins, mapping = aes(x=flipper_length_mm,
+                               y = body_mass_g, color=species, alpha =bill_depth_mm))+
+  geom_path(aes(group=species))+
+  stat_ellipse()+
+  geom_point(aes(color=sex))+
+  geom_polygon()+
+  geom_hex()+
+  geom_bin_2d()+
+  geom_boxplot()+
+  geom_hline(yintercept = 4500, linewidth=69, col="darkorchid4", #I sm going to hell
+             linetype='21', alpha=.25)+
+  geom_point(col="darkorchid3", aes(alpha=bill_depth_mm))+
+  theme(axis.title = element_text(face = 'italic', size = 12, angle = 30),
+        legend.background = element_rect(fill='deeppink3', color= 'lightpink', linewidth =5))
+
+ggplot(penguins, mapping = aes(x=flipper_length_mm,
+                               y = body_mass_g, color=species, alpha =bill_depth_mm))+
+  geom_path(aes(group=species))+
+  stat_ellipse()+
+  geom_point(aes(color=sex))+
+  geom_polygon()+
+  geom_hex()+
+  geom_bin_2d()+
+  geom_boxplot()+
+  geom_hline(yintercept = 4500, linewidth=69, col="darkorchid4", #I sm going to hell
+             linetype='21', alpha=.25)+
+  geom_point(col="darkorchid3", aes(alpha=bill_depth_mm))+
+  theme(axis.title = element_text(face = 'italic', size = 12, angle = 30),
+        legend.background = element_rect(fill='deeppink3', color= 'lightpink', linewidth =5))
+
