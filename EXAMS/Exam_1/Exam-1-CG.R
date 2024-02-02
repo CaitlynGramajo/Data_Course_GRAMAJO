@@ -7,7 +7,7 @@ library(tidyverse)
 # Task 1 ####
 #Read the cleaned_covid_data.csv file into an R data frame. (20 pts)
 
-data<-read.csv("./cleaned_covid_data.csv")
+data<-read.csv("./data/cleaned_covid_data.csv") # I am assuming you are already in the Exam_1 folder
 
 # Task 2 ####
 #Subset the data set to just show states that begin with "A" and save this as an object called A_states. (20 pts)
