@@ -1,0 +1,17 @@
+02/02/2024
+Final project Idea
+
+I am going to look at how quadruple jumps has influence mens figure skating scores and how the new scoring system inpleneted after the 2017-2018 season changes things if at all. I am going to use a data set that has the short program and freeskate program scores from each man the qualified for the freeskate at the World Figure Skating Championships for the years 2005 to 2022 (not including 2020 because it did not happen). The data is broken down into 10 columns: 
+
+Year- The year it took place (date)
+Skater- The last name of the skater (character)
+SP Total - The total score for the Short Program (numeric)
+SP TES - The number of points that came from the Technical score (numeric)
+SP PC - The number of points that came from the Component score (numeric)
+Quads in SP - The number of quads attempted in the Short Program (numeric)
+FS Total - The total score for the Freeskate (numeric)
+FS TES - The number of points that came from the Technical score (numeric)
+FS PC - The number of points that came from the Component score (numeric)
+Quads in FS - The number of quads attempted in the Freeskate (numeric)
+
+The data can be found here: https://www.kaggle.com/datasets/mitchellfriess/fsscores?resource=download
