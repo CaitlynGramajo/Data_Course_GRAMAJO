@@ -71,8 +71,6 @@ religiosity # take quick look at resulting table
 plot(x=religiosity$Mean.Pop,y=religiosity$Mean.Religiosity)
 
 
-
-
 #####################################
 #              Part 2               #
 # Beginning to look at correlations #
