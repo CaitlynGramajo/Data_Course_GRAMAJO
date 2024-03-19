@@ -1,0 +1,48 @@
+## Date, Name, Class, Assignment Number ####
+
+#03/19/2024
+#Caitlyn Gramajo
+#BIO 3100  Assignment 8 Part 2
+
+##Part 2####
+#Upload responses to the following as a numbered plaintext document to Canvas:
+
+###Question 1####
+#Are any of your predicted response values from your best model scientifically meaningless? Explain.
+
+#All of the predictions make sense in context. They are all positive meaning that the plant is growing and not dying.
+
+###Question 2####
+#In your plots, did you find any non-linear relationships? Do a bit of research online and give a link to at least one resource explaining how to deal with modeling non-linear relationships in R.
+
+#Yes in the GrowthRate V Nitrogen plot a curve shows up indicating a non-linear relationship.
+
+#https://www.geeksforgeeks.org/non-linear-regression-in-r/
+
+###Question 3####
+#Write the code you would use to model the data found in “/Data/non_linear_relationship.csv” with a linear model (there are a few ways of doing this)
+
+#copying over the non_linear_relationshop.csv to this project
+
+data2<-read_csv("./non_linear_relationship.csv")
+data2 %>% 
+  ggplot(mapping = aes(x=predictor, y = response))+
+  geom_point(color="darkorchid3")+
+  theme_minimal()
+
+mod10<-glm(data = data2,
+           formula = response ~ predictor)
+
+boxcox_result<-boxcox(mod10)
+
+lambda <- boxcox_result$x[which.max(boxcox_result$y)]
+
+transformed_y <- if (lambda == 0) log(data2$response) else ((data2$response^lambda - 1) / lambda)
+
+data3 <- data.frame(predictor = data2$predictor, transformed_y)
+
+mod10.2 <- glm(data = data3,
+               formula = transformed_y ~ predictor)
+summary(mod10.2)
+
+#The new linear model will be modeling the transformed variable as a response of the predictor x
