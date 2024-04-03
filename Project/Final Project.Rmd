@@ -1,0 +1,170 @@
+---
+title: "Interactive Satellite Map"
+author: "Caitlyn Gramajo"
+date: "2024-04-02"
+output: 
+  html_document:
+    code_folding: hide
+  
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+```
+
+## Idea
+
+One of my favorite things to do it make cool pictures so the goal of my project was simple to make a cool picture. I asked one of my cousins who is obsessed with space if he knew of good space data I could play with. He directed me to a place with satellite data and the idea came to me. I was going to make a 3 dimensional plot of the satellites around earth that could be moved with a curser.
+
+## Data source
+
+The data I am using is from https://www.ucsusa.org/resources/satellite-database
+
+## Plot
+
+```{r}
+library(tidyverse)
+library(readxl)
+library(janitor)
+library(rgl) 
+
+dat<-read_xlsx("UCS-Satellite-Database 5-1-2023.xlsx")
+dat1<-clean_names(dat)
+#colnames(dat1)
+
+## Dropping everything past comments because I don't know what it is and it is mostly NA ####
+
+selected_columns <- colnames(select(dat1, c(1:26)))
+
+dat2<-
+  dat1 %>% 
+  select(all_of(selected_columns))
+
+#colnames(dat2)
+
+## I only want orbit stuff ####
+selected_columns2 <- colnames(select(dat2, c("current_official_name_of_satellite","country_org_of_un_registry","country_of_operator_owner","operator_owner" ,"users","purpose","class_of_orbit","type_of_orbit","longitude_of_geo_degrees","perigee_km","apogee_km","eccentricity","inclination_degrees","period_minutes")))
+
+dat3<-
+  dat2 %>% 
+  select(all_of(selected_columns2))
+
+## Check for NAs in all columns ####
+#sapply(dat3, function(col) any(is.na(col)))
+
+# Drop rows with NAs
+dat4 <- na.omit(dat3)
+
+## Making perigee + apogee numeric ####
+
+dat5 <- dat4 %>%
+  mutate(perigee = as.numeric(perigee_km),  # Convert 'perigee' to numeric
+         apogee = as.numeric(apogee_km)) 
+
+## Function for satellite posititon #####
+calculate_satellite_positions <- function(longitude_of_geo_degrees, perigee_km, apogee_km, eccentricity, inclination_degrees, period_minutes) {
+  # Constants
+  R_earth <- 6371  # Earth radius in km
+  
+  # Initialize lists to store coordinates
+  x <- y <- z <- NULL
+  
+  # Convert inputs to numeric
+  longitude_of_geo_degrees <- as.numeric(longitude_of_geo_degrees)
+  perigee_km <- as.numeric(perigee_km)
+  apogee_km <- as.numeric(apogee_km)
+  eccentricity <- as.numeric(eccentricity)
+  inclination_degrees <- as.numeric(inclination_degrees)
+  period_minutes <- as.numeric(period_minutes)
+  
+  # Check for non-numeric values
+  if (any(is.na(longitude_of_geo_degrees)) || any(is.na(perigee_km)) || any(is.na(apogee_km)) ||
+      any(is.na(eccentricity)) || any(is.na(inclination_degrees)) || any(is.na(period_minutes))) {
+    stop("Input arguments must be numeric")
+  }
+  
+  for (i in seq_along(longitude_of_geo_degrees)) {
+    # Orbital parameters for current satellite
+    lon <- longitude_of_geo_degrees[i]
+    perigee <- perigee_km[i]
+    apogee <- apogee_km[i]
+    ecc <- eccentricity[i]
+    incl <- inclination_degrees[i]
+    period <- period_minutes[i]
+    
+    # Semi-major axis (average of perigee and apogee)
+    semi_major_axis <- (perigee + apogee) / 2
+    
+    # Orbital period in seconds
+    period_seconds <- period * 60
+    
+    # True anomaly
+    M <- 2 * pi * (period_seconds / 86400)  # Mean anomaly
+    E <- M  # Initial guess for eccentric anomaly
+    iter <- 0
+    while (iter < 100) {  # Limit iterations to prevent infinite loop
+      E_next <- E - (E - ecc * sin(E) - M) / (1 - ecc * cos(E))
+      if (abs(E_next - E) < 1e-8) break  # Convergence criteria
+      E <- E_next
+      iter <- iter + 1
+    }
+    
+    # Distance from center to focus
+    r <- semi_major_axis * (1 - ecc * cos(E))
+    
+    # True anomaly
+    theta <- atan2(sqrt(1 - ecc^2) * sin(E), cos(E) - ecc)
+    
+    # Convert orbital elements to 3D coordinates
+    x <- c(x, r * (cos(lon) * cos(incl) * cos(theta) - sin(lon) * sin(theta)))
+    y <- c(y, r * (sin(lon) * cos(incl) * cos(theta) + cos(lon) * sin(theta)))
+    z <- c(z, r * sin(incl) * sin(theta))
+  }
+  
+  return(data.frame(x = x, y = y, z = z))
+}
+
+
+
+## Calculate satellite positions with function ####
+satellite_positions <- calculate_satellite_positions(
+  dat5$longitude_of_geo_degrees,
+  dat5$perigee_km,
+  dat5$apogee_km,
+  dat5$eccentricity,
+  dat5$inclination_degrees,
+  dat5$period_minutes
+)
+
+## Plotting ####
+
+# Create a 3D plot window
+open3d()
+
+# Create a 3D sphere representing the Earth
+rgl::spheres3d(0, 0, 0, radius = 6371, color = "blue")
+
+# Plot satellite positions on the sphere
+rgl::points3d(satellite_positions$x, satellite_positions$y, satellite_positions$z, col = "darkorchid3", size = 5)
+
+# Add axis labels
+rgl::text3d(100000, 0, 0, "X", adj = c(-0.5, 0.5), col = "black")
+rgl::text3d(0, 100000, 0, "Y", adj = c(-0.5, 0.5), col = "black")
+rgl::text3d(0, 0, 100000, "Z", adj = c(-0.5, 0.5), col = "black")
+
+# Add lines from the origin to each axis
+rgl::lines3d(c(-100000, 100000), c(0, 0), c(0, 0), col = "black")  # X-axis
+rgl::lines3d(c(0, 0), c(-100000, 100000), c(0, 0), col = "black")  # Y-axis
+rgl::lines3d(c(0, 0), c(0, 0), c(-100000, 100000), col = "black")  # Z-axis
+
+# Add axes with scale lines and labels
+axes3d(edges = c("x", "y", "z"), tick = TRUE, labels = TRUE,
+       xlim = c(-100000, 100000), ylim = c(-100000, 100000), zlim = c(-100000, 100000))
+
+# Save the 3D plot as an object
+plot3d_object <- rgl::rglwidget()
+
+plot3d_object
+
+```
+
