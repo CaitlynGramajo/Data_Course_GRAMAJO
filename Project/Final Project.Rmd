@@ -1,7 +1,5 @@
 ---
 title: "Interactive Satellite Map"
-author: "Caitlyn Gramajo"
-date: "2024-04-02"
 output: 
   html_document:
     code_folding: hide
@@ -12,15 +10,28 @@ output:
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
 ```
 
+<style>
+  body {
+    background-color: #f5f5f5;  /* Specify the desired background color */
+  }
+</style>
+
 ## Idea
 
-One of my favorite things to do it make cool pictures so the goal of my project was simple to make a cool picture. I asked one of my cousins who is obsessed with space if he knew of good space data I could play with. He directed me to a place with satellite data and the idea came to me. I was going to make a 3 dimensional plot of the satellites around earth that could be moved with a curser.
+One of my favorite things to do it make cool pictures so the goal of my project was simple, make a cool picture. I asked one of my cousins who is obsessed with space if he knew of a good space data I could play with. He directed me to the UCS Satellite Database (linked below) a place with a lot of satellite data and the idea came to me. I was going to make a 3 dimensional plot of the satellites around earth that could be moved with a curser.
 
-## Data source
+### Data source
 
 The data I am using is from https://www.ucsusa.org/resources/satellite-database
 
-## Plot
+## Method
+
+I made this interactive map in Rstudio using a library I had never used before rgl which is a 3d modeling library> I also made a function that coverts a satellites longitude in degrees, perigee in kilometers, apogee in kilometers, eccentricity, inclination in degrees, and period in minutes in coordinates of the form (x,y,z) that could then be plotted in a 3D space.
+
+## The Plot
+
+The plot below has a blue sphere with a radius scaled to the size of the earths (6731 kilometers) centered at the origin of this picture with an x y and z axis. There is a a scale on the side going from -100,000 to 100,000 respective to the center of the earth. The sphere has purple dots around it representing the satellites. This plot is what I set out to do though I wish I would have made the sphere look like the earth however that would have required earth elevation data which I did not have. Maybe one day I can. I think it would also be fun to color them by continent, purpose, or type of orbit.
+
 
 ```{r}
 library(tidyverse)
@@ -139,7 +150,7 @@ satellite_positions <- calculate_satellite_positions(
 ## Plotting ####
 
 # Create a 3D plot window
-open3d()
+#open3d()
 
 # Create a 3D sphere representing the Earth
 rgl::spheres3d(0, 0, 0, radius = 6371, color = "blue")
